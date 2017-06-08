@@ -46,11 +46,15 @@ def _create_tunnel(proxy_host, proxy_port, target_host, target_port,
 
     :returns: socket
     """
-    conn = HTTP11Connection(proxy_host, proxy_port, timeout=timeout)
-    conn.request('CONNECT', '%s:%d' % (target_host, target_port),
-                 headers=proxy_headers)
+    try:
+        conn = HTTP11Connection(proxy_host, proxy_port, timeout=timeout)
+        conn.request('CONNECT', '%s:%d' % (target_host, target_port),
+                     headers=proxy_headers)
 
-    resp = conn.get_response()
+        resp = conn.get_response()
+    except IOError as e:
+        raise ProxyError(e)
+
     if resp.status != 200:
         raise ProxyError("Tunnel connection failed: %d %s" % (
             resp.status, to_native_string(resp.reason)))
