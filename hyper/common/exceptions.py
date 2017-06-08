@@ -21,7 +21,7 @@ class InvalidResponseError(Exception):
     pass
 
 
-class SocketError(Exception):
+class SocketError(IOError):
     """
     An error occurred during socket operation.
     """
@@ -38,9 +38,11 @@ class LineTooLongError(Exception):
 
 # Create our own ConnectionResetError.
 try:  # pragma: no cover
+    # Python 3
     ConnectionResetError = ConnectionResetError
 except NameError:  # pragma: no cover
-    class ConnectionResetError(Exception):
+    # Python 2
+    class ConnectionResetError(IOError):
         """
         A HTTP connection was unexpectedly reset.
         """
@@ -77,7 +79,7 @@ class MissingCertFile(Exception):
 try:  # pragma: no cover
     ConnectionError = ConnectionError
 except NameError:  # pragma: no cover
-    class ConnectionError(Exception):
+    class ConnectionError(IOError):
         """
         An error occurred during connection to a host.
         """
